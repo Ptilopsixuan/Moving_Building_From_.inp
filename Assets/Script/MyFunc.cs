@@ -62,7 +62,7 @@ public class MyFunc : MonoBehaviour
             }
         }
     }
-    public static GameObject createConn(Vector3[] vec, Material material, string name, string tag)
+    private static GameObject createConn(Vector3[] vec, Material material, string name, string tag)
     {
         GameObject go = new GameObject(name);
         go.tag = tag;
@@ -76,7 +76,7 @@ public class MyFunc : MonoBehaviour
 
         return go;
     }
-    public static GameObject createS3R(Vector3[] vec, Material material,string name,string tag)
+    private static GameObject createS3R(Vector3[] vec, Material material, string name, string tag)
     {
         GameObject go = new GameObject(name);
         go.tag = tag;
@@ -95,7 +95,7 @@ public class MyFunc : MonoBehaviour
 
         return go;
     }
-    public static GameObject createS4R(Vector3[] vec, Material material, string name, string tag)
+    private static GameObject createS4R(Vector3[] vec, Material material, string name, string tag)
     {
         GameObject go = new GameObject(name);
         go.tag = tag;
@@ -114,16 +114,17 @@ public class MyFunc : MonoBehaviour
 
         return go;
     }
-    public static void DrawBuilding(MyClass.Building building,Material preMaterial,GameObject prePoint) 
+    public static void DrawBuilding(MyClass.Building building, Material preMaterial)
     {
         //draw the points of .inp
-        for (int i = 0; i < building.pos.Length; i++)//iterate each Node
-        {
-            GameObject point = Instantiate(prePoint, building.pos[i], Quaternion.identity);//create each node from Prefab
-            point.name = building.name + i;//name each copied Node
-            point.transform.parent = building.original.transform;//set points' parent object in order to control
-            point.tag = "point";
-        }
+        //for (int i = 0; i < building.pos.Length; i++)//iterate each Node
+        //{
+        //    GameObject point = new GameObject(building.name + i);
+        //    point.transform.position = building.pos[i];
+        //    point.name = building.name + i;//name each copied Node
+        //    point.transform.parent = building.original.transform;//set points' parent object in order to control
+        //    point.tag = "point";
+        //}
         for (int i = 0; i < building.conn.Length; i++)
         //foreach (Vector2 conn in building.connect) //iterate each connection
         {
@@ -132,7 +133,7 @@ public class MyFunc : MonoBehaviour
             Vector3 pos1 = building.pos[node1Index];
             Vector3 pos2 = building.pos[node2Index];
             Vector3[] vec = new Vector3[2] { pos1, pos2 };
-            GameObject connection = MyFunc.createConn(vec, preMaterial, "Con" + i, "line");
+            GameObject connection = createConn(vec, preMaterial, "Con" + i, "line");
             connection.transform.parent = building.original.transform;
         }
         for (int i = 0; i < building.s3r.Length; i++)//iterate each s3r
@@ -144,7 +145,7 @@ public class MyFunc : MonoBehaviour
             Vector3 pos2 = building.pos[node2Index];
             Vector3 pos3 = building.pos[node3Index];
             Vector3[] vec = new Vector3[3] { pos1, pos2, pos3 };
-            GameObject shear3 = MyFunc.createS3R(vec, preMaterial, "S3R" + i, "shear3");
+            GameObject shear3 = createS3R(vec, preMaterial, "S3R" + i, "shear3");
             shear3.transform.parent = building.original.transform;
         }
         for (int i = 0; i < building.s4r.Length; i++)//iterate each s4r
@@ -158,13 +159,15 @@ public class MyFunc : MonoBehaviour
             Vector3 pos3 = building.pos[node3Index];
             Vector3 pos4 = building.pos[node4Index];
             Vector3[] vec = new Vector3[4] { pos1, pos2, pos3, pos4 };
-            GameObject shear4 = MyFunc.createS4R(vec, preMaterial, "S4R" + i, "shear4");
+            GameObject shear4 = createS4R(vec, preMaterial, "S4R" + i, "shear4");
             shear4.transform.parent = building.original.transform;
         }
     }
-    //public static void ChangeColors(MyClass.Building building) 
-    //{
-    //    List<List<Vector3>> displacement = building.displacement;
 
-    //}
+    //public static void ChangeColors(MyClass.Building building) 
+
+    public static void DrawCurve()
+    {
+
+    }
 }

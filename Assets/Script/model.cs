@@ -11,19 +11,17 @@ using UnityEngine.UIElements;
 
 public class model : MonoBehaviour
 {
-    public GameObject prePoint;
     public Material preMaterial;
     public static List<MyClass.Building> buildings = new List<MyClass.Building>();
 
-    void Start()
+    public void Import()
     //void Awake()
     {
-        float startTime = Time.realtimeSinceStartup;
+        float startTime = Time.realtimeSinceStartup;//count time cost
 
-        Quaternion q = Quaternion.identity;
         string dataPath = Application.streamingAssetsPath;
 
-        //read model's points
+        //read model's points in .inp
         string modelPath = dataPath + "/model";//folder including models' information
         DirectoryInfo modelDir = new DirectoryInfo(modelPath);
         FileInfo[] modelFiles = modelDir.GetFiles();//get all files' name
@@ -42,32 +40,41 @@ public class model : MonoBehaviour
                 building.readInp(modelFile);//read .inp file
                 buildings.Add(building);//to transmit the information
 
-                Debug.Log(modelFiles[i].Name);
-                Debug.Log("nodesCount" + building.pos.Length);
+                Debug.Log(i + ": " + modelFiles[i].Name);
+                //Debug.Log("nodesCount" + building.pos.Length);
 
-                MyFunc.DrawBuilding(building, preMaterial,prePoint);//create the buildings
+                MyFunc.DrawBuilding(building, preMaterial);//create the buildings
             }
         }
+        float readInpTime = Time.realtimeSinceStartup;
 
         //read displacements
         string displacementPath = dataPath + "/displacement";//folder including displacements' information
         DirectoryInfo displacementDir = new DirectoryInfo(displacementPath);
         FileInfo[] displacementFiles = displacementDir.GetFiles();//get all files' name
+        int n = 0;
         for (int i = 0; i < displacementFiles.Length; i++)//iterate the file
         {
+            if (displacementFiles[i].Name.EndsWith("meta"))
+            {
+                n++;
+            }
             if (displacementFiles[i].Name.EndsWith("csv"))//("meta")){ continue; }
             {
                 string displacementFile = (displacementPath + "/" + displacementFiles[i].Name).ToString();//load path
                 DataTable dt = MyFunc.OpenCSV(displacementFile);
-                buildings[0].displacement = dt;
+                buildings[i-n].displacement = dt;//if the displacement files' sequence is the same as the model files'
 
-                Debug.Log(displacementFiles[i].Name);
-                Debug.Log(dt.Rows.Count);
-                Debug.Log(dt.Columns.Count);
+                Debug.Log(i + ": " + displacementFiles[i].Name);
+                //Debug.Log(dt.Rows.Count);
+                //Debug.Log(dt.Columns.Count);
+
             }
         }
 
         float endTime = Time.realtimeSinceStartup;
-        Debug.Log(endTime - startTime);
+
+        Debug.Log("readInpTime: " + (readInpTime - startTime));
+        Debug.Log("readCsvTime: " + (endTime - readInpTime));
     }
 }

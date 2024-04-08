@@ -14,14 +14,13 @@ public class MyClass : MonoBehaviour
     {
         public string name;
         public GameObject original;
-        public Vector3[] pos;
         public int count;
+        public Vector3[] pos;
         public Vector2[] conn;
         public Vector3[] s3r;
         public Vector4[] s4r;
 
-        //public List<List<Vector3>> displacement;//inside layer of List is Nodes' list, outside layer is time steps' list.
-        public DataTable displacement;
+        public DataTable displacement;//one column for one timestep, one row for one node
 
         public void readInp(string filePath)
         {
